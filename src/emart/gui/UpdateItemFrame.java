@@ -57,7 +57,7 @@ public class UpdateItemFrame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         txtQuantity = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtProductPrice = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         txtOurPrice = new javax.swing.JTextField();
         btnDelete = new javax.swing.JButton();
@@ -129,6 +129,7 @@ public class UpdateItemFrame extends javax.swing.JFrame {
         txtProductName.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
 
         Taxcombo.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        Taxcombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "0%", "5%", "18%", "28%" }));
 
         jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
@@ -151,7 +152,7 @@ public class UpdateItemFrame extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Product Price");
 
-        jTextField5.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        txtProductPrice.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
 
         jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
@@ -188,7 +189,7 @@ public class UpdateItemFrame extends javax.swing.JFrame {
                     .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(33, 33, 33)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField5)
+                    .addComponent(txtProductPrice)
                     .addComponent(txtOurPrice))
                 .addContainerGap())
         );
@@ -202,7 +203,7 @@ public class UpdateItemFrame extends javax.swing.JFrame {
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtProductCompany, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtProductPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -223,6 +224,11 @@ public class UpdateItemFrame extends javax.swing.JFrame {
         btnDelete.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnDelete.setForeground(new java.awt.Color(255, 255, 255));
         btnDelete.setText("Update");
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         showStockstable.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         showStockstable.setModel(new javax.swing.table.DefaultTableModel(
@@ -239,6 +245,11 @@ public class UpdateItemFrame extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        showStockstable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                showStockstableMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(showStockstable);
@@ -290,6 +301,50 @@ public class UpdateItemFrame extends javax.swing.JFrame {
     private void txtProductCompanyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtProductCompanyActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtProductCompanyActionPerformed
+
+    private void showStockstableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_showStockstableMouseClicked
+        int row = showStockstable.getSelectedRow();
+        txtProductID.setText(tm.getValueAt(row, 0).toString());
+        txtProductName.setText(tm.getValueAt(row, 1).toString());
+        txtProductCompany.setText(tm.getValueAt(row, 2).toString());
+        txtProductPrice.setText(tm.getValueAt(row, 3).toString());
+        txtOurPrice.setText(tm.getValueAt(row, 4).toString());
+        txtQuantity.setText(tm.getValueAt(row, 5).toString());
+        String tx = tm.getValueAt(row, 6).toString();
+        Taxcombo.setSelectedItem(tx);
+
+    }//GEN-LAST:event_showStockstableMouseClicked
+
+    //valldate input
+    private boolean validateInput() {
+        return !(txtProductName.getText().isEmpty()
+                || txtProductCompany.getText().isEmpty()
+                || txtProductPrice.getText().isEmpty()
+                || txtOurPrice.getText().isEmpty()
+                || txtQuantity.getText().isEmpty());
+    }
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        if (!validateInput()) {
+            JOptionPane.showMessageDialog(null, "Please fill all input fields.");
+            return;
+
+        }
+        try{
+            int n = Taxcombo.getSelectedItem().toString().length();
+            int tax = Integer.parseInt(Taxcombo.getSelectedItem().toString().substring(0,n-1));
+            ProductsPojo p = new ProductsPojo();
+            p.setProductId(txtProductID.getText());
+            p.setProductCompany(txtProductCompany.getText().trim());
+            p.setProductName(txtProductName.getText().trim());
+            p.setProductPrice(Double.parseDouble(txtProductPrice.getText().trim()));
+            p.setOurPrice(Double.parseDouble(txtOurPrice.getText().trim()));
+            p.setQuantity(Integer.parseInt(txtQuantity.getText().trim()));
+            
+        }
+
+
+    }//GEN-LAST:event_btnDeleteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -343,12 +398,12 @@ public class UpdateItemFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField5;
     private javax.swing.JTable showStockstable;
     private javax.swing.JTextField txtOurPrice;
     private javax.swing.JTextField txtProductCompany;
     private javax.swing.JTextField txtProductID;
     private javax.swing.JTextField txtProductName;
+    private javax.swing.JTextField txtProductPrice;
     private javax.swing.JTextField txtQuantity;
     // End of variables declaration//GEN-END:variables
      private void loadProductDetails() {

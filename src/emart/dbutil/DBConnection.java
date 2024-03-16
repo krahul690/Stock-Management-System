@@ -1,8 +1,11 @@
 package emart.dbutil;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 import javax.swing.JOptionPane;
 
 public class DBConnection {
@@ -12,12 +15,18 @@ public class DBConnection {
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql:///stms";
-            String user = "root";
-            String password = "Rahul@2003";
+
+            //Esatblish a connection
+            FileInputStream fis = new FileInputStream("C:\\Users\\LENOVO\\OneDrive\\Documents\\NetBeansProjects\\Stock Management System\\src\\properties.properties");
+
+            Properties p = new Properties();
+            p.load(fis);
+            String url = p.getProperty("url");
+            String user = p.getProperty("user");
+            String password = p.getProperty("password");
             conn = DriverManager.getConnection(url, user, password);
             JOptionPane.showMessageDialog(null, "Connection opened");
-        } catch (ClassNotFoundException | SQLException ee) {
+        } catch (ClassNotFoundException | SQLException | IOException ee) {
             // Log the exception or use a logging framework
             ee.printStackTrace();
             // Consider throwing an exception or handling it in a more graceful way
@@ -30,7 +39,7 @@ public class DBConnection {
     public static Connection getConnection() {
         try {
             if (conn == null || conn.isClosed()) {
-                conn = DriverManager.getConnection("jdbc:mysql:///stms", "root", "Rahul@2003");
+                conn = DriverManager.getConnection("url", "user", "password");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -50,24 +59,6 @@ public class DBConnection {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // 
 //package emart.dbutil;
