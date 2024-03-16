@@ -1,19 +1,70 @@
 package emart.gui;
 
+import emart.dao.ReceptionistDao;
+//import emart.pojo.ReceptionistPojo;
+import java.util.Map;
+import java.util.Set;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author LENOVO
  */
 public class UpdateReceptionistFram extends javax.swing.JFrame {
 
- 
+    Map<String, String> receptionist;
+    String Password;
+
     public UpdateReceptionistFram() {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(this);
+        loadReceptionistDetails();
     }
 
- 
+    private void loadReceptionistDetails() {
+        try {
+            // Assuming 'ReceptionistDao' has a method 'getAllReceptionistI' that returns a Map<String, ReceptionistPojo>
+            receptionist = ReceptionistDao.getAllReceptionistI();
+
+            // Check if the receptionist map is empty
+            if (receptionist.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No receptionist present");
+                return;
+            }
+
+            // Get the set of keys from the receptionist map
+            Set<String> keys = receptionist.keySet();
+
+            // Populate the JComboBox (ReceptionistId) with receptionist IDs
+            for (String id : keys) {
+                ReceptionistId.addItem(id);
+            }
+
+        } catch (Exception e) {
+            // Display an error message using JOptionPane
+            JOptionPane.showMessageDialog(null, "Error loading receptionist details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+            e.printStackTrace(); // Handle the exception as needed
+        }
+    }
+
+    private boolean validateInputs() {
+        char[] pwd = password.getPassword();
+        char[] repwd = reEnterpwsd.getPassword();
+        if (pwd.length < 4 || repwd.length < 4) {
+            JOptionPane.showMessageDialog(null, "Password must be atleast of 4 characters in length");
+            return false;
+        }
+        Password = String.valueOf(pwd);
+        String repassword = String.valueOf(repwd);
+        if (!Password.equals(repassword)) {
+            JOptionPane.showMessageDialog(null, "Password must be same");
+            return false;
+        }
+        return true;
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -46,11 +97,21 @@ public class UpdateReceptionistFram extends javax.swing.JFrame {
         btnBack.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnBack.setForeground(new java.awt.Color(255, 255, 255));
         btnBack.setText("Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         btnLogout.setBackground(new java.awt.Color(255, 51, 51));
         btnLogout.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setText("Logout");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -86,6 +147,11 @@ public class UpdateReceptionistFram extends javax.swing.JFrame {
         jLabel2.setText("Receptionist Id");
 
         ReceptionistId.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        ReceptionistId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ReceptionistIdActionPerformed(evt);
+            }
+        });
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -102,6 +168,7 @@ public class UpdateReceptionistFram extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Re Password");
 
+        txtRecName.setEditable(false);
         txtRecName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtRecNameActionPerformed(evt);
@@ -162,6 +229,11 @@ public class UpdateReceptionistFram extends javax.swing.JFrame {
         btnUpdate.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnUpdate.setForeground(new java.awt.Color(255, 255, 255));
         btnUpdate.setText("Update");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -210,16 +282,66 @@ public class UpdateReceptionistFram extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtRecNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRecNameActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_txtRecNameActionPerformed
 
     private void passwordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passwordActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_passwordActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        if (!validateInputs()) {
+            return;
+        }
+
+        try {
+            // Assuming 'ReceptionistDao' has a method 'updatePassword' that takes user ID and password
+            String userid = ReceptionistId.getSelectedItem().toString();
+            String newPassword = new String(password.getPassword()); // Assuming 'password' is a JPasswordField
+
+            boolean result = ReceptionistDao.updatePassword(userid, newPassword);
+
+            if (result) {
+                JOptionPane.showMessageDialog(null, "Password changed successfully");
+                clearText();
+                ReceptionistId.setSelectedIndex(0);
+            } else {
+                JOptionPane.showMessageDialog(null, "Password not changed");
+                clearText();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Log the exception for debugging purposes
+
+            // Display an error message using JOptionPane
+            JOptionPane.showMessageDialog(null, "Error updating password: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void ReceptionistIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ReceptionistIdActionPerformed
+       String userid = ReceptionistId.getSelectedItem().toString();
+       String recepName = receptionist.get(userid);
+       txtRecName.setText(recepName);
+       
+       
+    }//GEN-LAST:event_ReceptionistIdActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        ManageReceptionistFram abc = new ManageReceptionistFram();
+        abc.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        LoginFrame login = new LoginFrame();
+        login.setVisible(true);
+        this.dispose();
+        
+        
+    }//GEN-LAST:event_btnLogoutActionPerformed
+ 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -269,4 +391,10 @@ public class UpdateReceptionistFram extends javax.swing.JFrame {
     private javax.swing.JPasswordField reEnterpwsd;
     private javax.swing.JTextField txtRecName;
     // End of variables declaration//GEN-END:variables
+
+ private void clearText() {
+    password.setText("");
+    reEnterpwsd.setText("");
+}
+
 }

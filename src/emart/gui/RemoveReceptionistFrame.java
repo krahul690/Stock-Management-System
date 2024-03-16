@@ -1,18 +1,37 @@
 package emart.gui;
 
-/**
- *
- * @author LENOVO
- */
-public class RemoveReceptionistFrame extends javax.swing.JFrame {
+import emart.dao.ReceptionistDao;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.JOptionPane;
 
  
+public class RemoveReceptionistFrame extends javax.swing.JFrame {
+
     public RemoveReceptionistFrame() {
         initComponents();
         setLocationRelativeTo(this);
         setResizable(false);
+        loadReceptionistId();
     }
 
+    private void loadReceptionistId() {
+        try {
+            List<String> receptionistId = ReceptionistDao.getAllreceptionistUserid();
+            if (receptionistId.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No receptionists present.");
+                return;
+            }
+            btnremove.setEnabled(true);
+            // Populate the combo box with the receptionist IDs
+            for (String receptionistIds : receptionistId) {
+                receptionistidcombo.addItem(receptionistIds);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "No receptionists found.", "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -44,18 +63,39 @@ public class RemoveReceptionistFrame extends javax.swing.JFrame {
         receptionistidcombo.setBackground(new java.awt.Color(255, 51, 51));
         receptionistidcombo.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         receptionistidcombo.setForeground(new java.awt.Color(255, 255, 255));
+        receptionistidcombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                receptionistidcomboActionPerformed(evt);
+            }
+        });
 
         btnremove.setBackground(new java.awt.Color(255, 51, 51));
         btnremove.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnremove.setText("Remove");
+        btnremove.setEnabled(false);
+        btnremove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnremoveActionPerformed(evt);
+            }
+        });
 
         btnback.setBackground(new java.awt.Color(255, 51, 51));
         btnback.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnback.setText("Back");
+        btnback.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbackActionPerformed(evt);
+            }
+        });
 
         btnlogout.setBackground(new java.awt.Color(255, 51, 51));
         btnlogout.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnlogout.setText("Logout");
+        btnlogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnlogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -128,9 +168,46 @@ public class RemoveReceptionistFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-   
+    private void receptionistidcomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receptionistidcomboActionPerformed
+
+
+    }//GEN-LAST:event_receptionistidcomboActionPerformed
+
+    private void btnremoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnremoveActionPerformed
+        try {
+            String userid = receptionistidcombo.getSelectedItem().toString();
+            boolean result = ReceptionistDao.deleteReceptionist(userid);
+            if (result) {
+                JOptionPane.showMessageDialog(this, "Receptionist Deleted Successfully.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                receptionistidcombo.removeItemAt(receptionistidcombo.getSelectedIndex());
+                if (receptionistidcombo.getItemCount() == 0) {
+                    btnremove.setEnabled(false);
+                    return;
+                }
+                JOptionPane.showMessageDialog(this, "No receptionists Deleted.", "Information", JOptionPane.INFORMATION_MESSAGE);
+
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Database Error", "Information", JOptionPane.INFORMATION_MESSAGE);
+            e.printStackTrace();
+        }
+
+    }//GEN-LAST:event_btnremoveActionPerformed
+
+    private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
+        ManageReceptionistFram abc = new ManageReceptionistFram();
+        abc.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnbackActionPerformed
+
+    private void btnlogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnlogoutActionPerformed
+        LoginFrame login = new LoginFrame();
+        login.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnlogoutActionPerformed
+
     public static void main(String args[]) {
- 
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new RemoveReceptionistFrame().setVisible(true);
@@ -148,4 +225,5 @@ public class RemoveReceptionistFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JComboBox<String> receptionistidcombo;
     // End of variables declaration//GEN-END:variables
+
 }

@@ -1,9 +1,6 @@
 package emart.gui;
 
-/**
- *
- * @author LENOVO
- */
+ 
 public class ManageReceptionistFram extends javax.swing.JFrame {
 
     public ManageReceptionistFram() {
@@ -104,6 +101,11 @@ public class ManageReceptionistFram extends javax.swing.JFrame {
         RemoveReceptionist.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         RemoveReceptionist.setText("Remove Receptionist");
         RemoveReceptionist.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        RemoveReceptionist.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RemoveReceptionistActionPerformed(evt);
+            }
+        });
 
         ViewReceptionist.setBackground(new java.awt.Color(255, 102, 102));
         ViewReceptionist.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -240,6 +242,12 @@ public class ManageReceptionistFram extends javax.swing.JFrame {
         Vrep.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_ViewReceptionistActionPerformed
+
+    private void RemoveReceptionistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveReceptionistActionPerformed
+       RemoveReceptionistFrame  rrp = new RemoveReceptionistFrame();
+       rrp.setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_RemoveReceptionistActionPerformed
 
     /**
      * @param args the command line arguments

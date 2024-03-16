@@ -254,6 +254,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Add Item"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addBtnActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="Removebtn">
               <Properties>
@@ -268,6 +271,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Remove Item"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RemovebtnActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="Updatebtn">
               <Properties>
@@ -282,6 +288,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Update Item"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="UpdatebtnActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="ShowStock">
               <Properties>
@@ -296,6 +305,9 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="Show Stock"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ShowStockActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

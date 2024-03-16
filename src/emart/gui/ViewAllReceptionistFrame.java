@@ -5,6 +5,12 @@
  */
 package emart.gui;
 
+import static emart.dao.ReceptionistDao.getAllReceptionistDetails;
+import emart.pojo.ReceptionistPojo;
+import java.sql.SQLException;
+import java.util.List;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author LENOVO
@@ -18,6 +24,8 @@ public class ViewAllReceptionistFrame extends javax.swing.JFrame {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(this);
+        loadReceptionistDetails();
+
     }
 
     /**
@@ -31,8 +39,10 @@ public class ViewAllReceptionistFrame extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        btnLogout = new javax.swing.JButton();
-        txtViewAllRecptionist = new javax.swing.JTextField();
+        btnBack = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ViewReceptionist = new javax.swing.JTable();
+        btnLogout1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -42,24 +52,41 @@ public class ViewAllReceptionistFrame extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("View All Receptionist");
 
-        btnLogout.setBackground(new java.awt.Color(255, 51, 51));
-        btnLogout.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
-        btnLogout.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogout.setText("Logout");
-        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+        btnBack.setBackground(new java.awt.Color(255, 51, 51));
+        btnBack.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        btnBack.setForeground(new java.awt.Color(255, 255, 255));
+        btnBack.setText("Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLogoutActionPerformed(evt);
+                btnBackActionPerformed(evt);
             }
         });
 
-        txtViewAllRecptionist.setEditable(false);
-        txtViewAllRecptionist.setBackground(new java.awt.Color(255, 102, 102));
-        txtViewAllRecptionist.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        txtViewAllRecptionist.setForeground(new java.awt.Color(255, 255, 255));
-        txtViewAllRecptionist.setText(" ");
-        txtViewAllRecptionist.addActionListener(new java.awt.event.ActionListener() {
+        ViewReceptionist.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "User ID", "User Name", "Emp Id", "Job", "Salary"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(ViewReceptionist);
+
+        btnLogout1.setBackground(new java.awt.Color(255, 51, 51));
+        btnLogout1.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
+        btnLogout1.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogout1.setText("Logout");
+        btnLogout1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtViewAllRecptionistActionPerformed(evt);
+                btnLogout1ActionPerformed(evt);
             }
         });
 
@@ -70,23 +97,29 @@ public class ViewAllReceptionistFrame extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(68, 68, 68)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtViewAllRecptionist)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 307, Short.MAX_VALUE)
-                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addGap(72, 72, 72)
+                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
+                        .addComponent(btnLogout1, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(43, 43, 43)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(txtViewAllRecptionist, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-                .addContainerGap())
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnLogout1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -103,13 +136,17 @@ public class ViewAllReceptionistFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtViewAllRecptionistActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtViewAllRecptionistActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtViewAllRecptionistActionPerformed
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        ManageReceptionistFram mrf = new ManageReceptionistFram();
+        mrf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBackActionPerformed
 
-    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLogoutActionPerformed
+    private void btnLogout1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogout1ActionPerformed
+        LoginFrame mf = new LoginFrame();
+        mf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnLogout1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -147,9 +184,39 @@ public class ViewAllReceptionistFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLogout;
+    private javax.swing.JTable ViewReceptionist;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnLogout1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField txtViewAllRecptionist;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
+
+    private void loadReceptionistDetails() {
+        try {
+            List<ReceptionistPojo> receptionists = getAllReceptionistDetails();
+
+            // Get the table model from jTable1
+            DefaultTableModel model = (DefaultTableModel) ViewReceptionist.getModel();
+
+            // Clear existing rows from the table
+            model.setRowCount(0);
+
+            // Populate the table with receptionist details
+            for (ReceptionistPojo receptionist : receptionists) {
+                Object[] rowData = {
+                    receptionist.getUserid(),
+                    receptionist.getEmpname(),
+                    receptionist.getEmpid(),
+                    receptionist.getJob(),
+                    receptionist.getSalary()
+                };
+                model.addRow(rowData);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception as needed
+        }
+
+    }
 }

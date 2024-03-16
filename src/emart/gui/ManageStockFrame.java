@@ -98,21 +98,41 @@ public class ManageStockFrame extends javax.swing.JFrame {
         addBtn.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         addBtn.setForeground(new java.awt.Color(255, 255, 255));
         addBtn.setText("Add Item");
+        addBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addBtnActionPerformed(evt);
+            }
+        });
 
         Removebtn.setBackground(new java.awt.Color(255, 51, 51));
         Removebtn.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         Removebtn.setForeground(new java.awt.Color(255, 255, 255));
         Removebtn.setText("Remove Item");
+        Removebtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RemovebtnActionPerformed(evt);
+            }
+        });
 
         Updatebtn.setBackground(new java.awt.Color(255, 51, 51));
         Updatebtn.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         Updatebtn.setForeground(new java.awt.Color(255, 255, 255));
         Updatebtn.setText("Update Item");
+        Updatebtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                UpdatebtnActionPerformed(evt);
+            }
+        });
 
         ShowStock.setBackground(new java.awt.Color(255, 51, 51));
         ShowStock.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         ShowStock.setForeground(new java.awt.Color(255, 255, 255));
         ShowStock.setText("Show Stock");
+        ShowStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ShowStockActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -215,6 +235,28 @@ public class ManageStockFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ShowStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowStockActionPerformed
+         ViewStocks vs = new ViewStocks();
+         vs.setVisible(true);
+         this.dispose();
+    }//GEN-LAST:event_ShowStockActionPerformed
+
+    private void UpdatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdatebtnActionPerformed
+        UpdateItemFrame utf = new UpdateItemFrame();
+        utf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_UpdatebtnActionPerformed
+
+    private void addBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addBtnActionPerformed
+        AddItemPanel aip = new AddItemPanel();
+        aip.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_addBtnActionPerformed
+
+    private void RemovebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemovebtnActionPerformed
+        
+    }//GEN-LAST:event_RemovebtnActionPerformed
 
     /**
      * @param args the command line arguments
