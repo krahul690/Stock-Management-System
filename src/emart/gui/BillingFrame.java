@@ -10,12 +10,15 @@ public class BillingFrame extends javax.swing.JFrame {
 
     ArrayList<ProductsPojo> al = new ArrayList<ProductsPojo>();
     DefaultTableModel tm;
+    double total = 0.0;
 
     public BillingFrame() {
         initComponents();
         //setResizable(false);
         setLocationRelativeTo(this);
+        tm = (DefaultTableModel) billtable.getModel();
         txtproudctId.requestFocus();
+
     }
 
     @SuppressWarnings("unchecked")
@@ -166,7 +169,7 @@ public class BillingFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBillGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBillGenerateActionPerformed
-        
+
     }//GEN-LAST:event_btnBillGenerateActionPerformed
 
     private void txtproudctIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtproudctIdActionPerformed
@@ -222,29 +225,38 @@ public class BillingFrame extends javax.swing.JFrame {
     private javax.swing.JTextField txtproudctId;
     // End of variables declaration//GEN-END:variables
 
-    //connection with DAO
     private void loadItemList(String productId) {
         try {
-            ProductsPojo p = ProductDAO.getProductDetails(productId);
-            if (p.getProductId() == null) {
-                JOptionPane.showMessageDialog(null, "Please enter a valid product id", "Error", JOptionPane.ERROR_MESSAGE);
-            } else {
-                // Clear existing table data
-                DefaultTableModel model = (DefaultTableModel) billtable.getModel();
-                model.setRowCount(0);
+            int index = getProductId(productId);
+            ProductsPojo product = ProductDAO.getProductDetails(productId);
 
-                // Add the retrieved product details to the table
-                model.addRow(new Object[]{
-                    p.getProductId(),
-                    p.getProductName(),
-                    p.getProductPrice(),
-                    p.getOurPrice(),
-                    p.getProductCompany(),
-                    p.getQuantity(),
-                    p.getTax(),
-                    // Calculate total price (example: product price * quantity)
-                    p.getProductPrice() * p.getQuantity()
-                });
+            if (product.getProductId() == null) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid product id", "Error", JOptionPane.ERROR_MESSAGE);
+                return; // Exit if product not found
+            }
+
+            if (index == -1) {
+                // Add new product to the list
+                Object[] rowData = createRowData(product);
+                tm.addRow(rowData);
+                al.add(product);
+                total += product.getTotal();
+            } else {
+                // Update existing product quantity and total
+                ProductsPojo existingProduct = al.get(index);
+                int oldQuantity = (int) tm.getValueAt(index, 5);
+                double amount = product.getOurPrice();  // Price without tax
+                int tax = product.getTax();  // Tax percentage
+                double totalAmount = amount + (amount * tax / 100);  // Total amount including tax
+                double existingTotal = (double) tm.getValueAt(index, 7);
+
+                tm.setValueAt(++oldQuantity, index, 5);
+                tm.setValueAt(existingTotal + totalAmount, index, 7);
+                total += totalAmount;
+
+                existingProduct.setQuantity(oldQuantity);
+                existingProduct.setTotal(existingTotal + totalAmount);
+                al.set(index, existingProduct);
             }
         } catch (Exception e) {
             e.printStackTrace(); // Handle or log the exception appropriately
@@ -252,4 +264,52 @@ public class BillingFrame extends javax.swing.JFrame {
         }
     }
 
+    private Object[] createRowData(ProductsPojo product) {
+        double amount = product.getOurPrice(); // Price without tax
+        int tax = product.getTax(); // Tax percentage
+        double totalAmount = amount + (amount * tax / 100); // Total amount including tax
+
+        Object[] rowData = new Object[8];
+        rowData[0] = product.getProductId();
+        rowData[1] = product.getProductName();
+        rowData[2] = product.getProductPrice();
+        rowData[3] = product.getOurPrice();
+        rowData[4] = product.getProductCompany();
+        rowData[5] = 1; // Default quantity for a new product
+        rowData[6] = totalAmount; // Set the total amount including tax
+        rowData[7] = totalAmount; // Set the total amount including tax
+
+        product.setQuantity(1); // Set default quantity for the product
+        product.setTotal(totalAmount);
+
+        return rowData;
+    }
+
+    private int getProductId(String productId) {
+        for (int i = 0; i < al.size(); i++) {
+            ProductsPojo product = al.get(i);
+            if (product.getProductId().equals(productId)) {
+                return i;
+            }
+        }
+        return -1; // Product not found
+    }
+
 }
+//
+//                // Clear existing table data
+//                DefaultTableModel model = (DefaultTableModel) billtable.getModel();
+//                model.setRowCount(0);
+//
+//                // Add the retrieved product details to the table
+//                model.addRow(new Object[]{
+//                    p.getProductId(),
+//                    p.getProductName(),
+//                    p.getProductPrice(),
+//                    p.getOurPrice(),
+//                    p.getProductCompany(),
+//                    p.getQuantity(),
+//                    p.getTax(),
+//                    // Calculate total price (example: product price * quantity)
+//                    p.getProductPrice() * p.getQuantity()
+//                });
