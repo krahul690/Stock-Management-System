@@ -2,6 +2,14 @@ package emart.pojo;
 
  
 public class ProductsPojo {
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
     public ProductsPojo(){
         
     }
@@ -12,8 +20,9 @@ public class ProductsPojo {
     private double ourPrice;
     private int tax;
     private int quantity;
+    private double total;
 
-    public ProductsPojo(String productId, String productName, String productCompany, double productPrice, double ourPrice, int tax, int quantity) {
+    public ProductsPojo(String productId, String productName, String productCompany, double productPrice, double ourPrice, int tax, int quantity,double  total) {
         this.productId = productId;
         this.productName = productName;
         this.productCompany = productCompany;
@@ -21,6 +30,7 @@ public class ProductsPojo {
         this.ourPrice = ourPrice;
         this.tax = tax;
         this.quantity = quantity;
+        this.total=total;
     }
 
     public String getProductId() {
@@ -78,5 +88,5 @@ public class ProductsPojo {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-    
+      
 }
