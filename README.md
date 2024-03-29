@@ -6,6 +6,7 @@ The project focuses on key features such as custom barcode generation, error-fre
 •	Ensure error-free billing through automated price calculation and discount application.
 •	Digitize and automate processes to eliminate manual paperwork.
 •	Provide a centralized platform for managing the entire shop's operations, including inventory, sales, and customer information.
+
 **Technologies Used:**
 3.1	 **Java** - Java serves as the primary programming language for developing the Stock Management System. Its platform independence, object-oriented nature, and extensive libraries make it a suitable choice for creating the application's logic and user interface.
 
