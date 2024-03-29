@@ -81,7 +81,7 @@ public class ProductDAO {
 
     public static boolean updateProducts(ProductsPojo p) throws SQLException {
         Connection conn = DBConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement("update products set P_NAME=?, P_COMPANYNAME=?,P_PRICE=?,P_OURPRICE=?,P_TAX=?,QUANTITY=?, WHERE P_ID=?");
+        PreparedStatement ps = conn.prepareStatement("update products set P_NAME=?, P_COMPANYNAME=?,P_PRICE=?,OUR_PRICE=?,P_TAX=?,QUANTITY=? WHERE P_ID=?");
 
         ps.setString(1, p.getProductName());
         ps.setString(2, p.getProductCompany());
@@ -91,6 +91,43 @@ public class ProductDAO {
         ps.setInt(6, p.getQuantity());
         ps.setString(7, p.getProductId());
         return ps.executeUpdate() == 1;
+
+    }
+
+    //Create for Billing details
+    public static ProductsPojo getProductDetails(String id) throws SQLException {
+        Connection conn = DBConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement("Select * from products WHERE P_ID=? and status='Y'");
+        ps.setString(1, id);
+
+        ResultSet rs = ps.executeQuery();
+        ProductsPojo p = new ProductsPojo();
+        if (rs.next()) {
+            p.setProductId(rs.getString(1));
+            p.setProductName(rs.getString(2));
+            p.setProductCompany(rs.getString(3));
+            p.setProductPrice(rs.getDouble(4));
+            p.setOurPrice(rs.getDouble(5));
+            p.setTax(rs.getInt(6));
+            p.setQuantity(rs.getInt(7));
+
+        }
+        return p;
+    }
+
+    public static boolean updateStocks(List<ProductsPojo> productList) throws SQLException {
+        Connection conn = DBConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement("update products set QUANTITY-? Where P_NAME=?");
+        int x=0;
+        for(ProductsPojo p: productList){
+            ps.setInt(1, p.getQuantity());
+            ps.setString(2, p.getProductId());
+           int rows= ps.executeUpdate();
+           if(rows!=0)
+               x++;
+        }
+        return x==productList.size();
+        
 
     }
 }
