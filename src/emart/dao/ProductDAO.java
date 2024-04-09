@@ -31,7 +31,7 @@ public class ProductDAO {
 
     public static boolean addProduct(ProductsPojo p) {
         try (Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement("INSERT INTO products (P_ID, P_NAME, P_COMPANYNAME, P_PRICE, OUR_PRICE, P_TAX, QUANTITY,status) VALUES (?, ?, ?, ?, ?, ?, ?,'Y')")) {
+             PreparedStatement ps = conn.prepareStatement("INSERT INTO products (P_ID, P_NAME, P_COMPANYNAME, P_PRICE, OUR_PRICE, P_TAX, QUANTITY,status) VALUES (?, ?, ?, ?, ?, ?, ?,'Y')")) {
 
             // Set the values for the prepared statement
             ps.setString(1, p.getProductId());
@@ -117,7 +117,7 @@ public class ProductDAO {
 
     public static boolean updateStocks(List<ProductsPojo> productList) throws SQLException {
         Connection conn = DBConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement("update products set QUANTITY-? Where P_NAME=?");
+        PreparedStatement ps = conn.prepareStatement("update products set QUANTITY= QUANTITY-? Where P_ID=?");
         int x=0;
         for(ProductsPojo p: productList){
             ps.setInt(1, p.getQuantity());
@@ -130,4 +130,13 @@ public class ProductDAO {
         
 
     }
+//        public static List<ProductsPojo> getOrderDetails() throws SQLException {
+//        Connection conn = DBConnection.getConnection();
+//        Statement st = conn.createStatement();
+//        ResultSet rs = st.executeQuery("Select * from orders");
+//        ArrayList<ProductsPojo> orderList = new ArrayList<>();
+//        
+//        }
+    
+    
 }

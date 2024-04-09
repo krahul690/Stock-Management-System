@@ -1,11 +1,23 @@
 package emart.gui;
 
+import emart.dao.OrderDAO;  // Correct import statement
 import emart.dao.ProductDAO;
 import emart.pojo.ProductsPojo;
+import java.sql.SQLException;
+//import java.sql.SQLException;
 import java.util.ArrayList;
+
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
+//package emart.gui;
+//
+//import emart.dao.ProductDAO;
+//import emart.pojo.ProductsPojo;
+//import java.sql.SQLException;
+//import java.util.ArrayList;
+//import javax.swing.JOptionPane;
+//import javax.swing.table.DefaultTableModel;
 public class BillingFrame extends javax.swing.JFrame {
 
     ArrayList<ProductsPojo> al = new ArrayList<ProductsPojo>();
@@ -29,7 +41,7 @@ public class BillingFrame extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtproudctId = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        btnback = new javax.swing.JButton();
         Logout = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         billtable = new javax.swing.JTable();
@@ -55,10 +67,15 @@ public class BillingFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(255, 102, 0));
-        jButton1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Back");
+        btnback.setBackground(new java.awt.Color(255, 102, 0));
+        btnback.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
+        btnback.setForeground(new java.awt.Color(255, 255, 255));
+        btnback.setText("Back");
+        btnback.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbackActionPerformed(evt);
+            }
+        });
 
         Logout.setBackground(new java.awt.Color(255, 102, 0));
         Logout.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -98,7 +115,7 @@ public class BillingFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtproudctId, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(82, 82, 82)
                         .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(21, 21, 21))
@@ -111,7 +128,7 @@ public class BillingFrame extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtproudctId)
                     .addComponent(Logout, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnback, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
                 .addContainerGap())
@@ -170,6 +187,83 @@ public class BillingFrame extends javax.swing.JFrame {
 
     private void btnBillGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBillGenerateActionPerformed
 
+       try {
+    String orderid = OrderDAO.getNextOrderId();
+    if (OrderDAO.addOrder(al, orderid) && ProductDAO.updateStocks(al)) {
+        // Calculate total bill amount
+        double totalBillAmount = 0.0;
+        for (ProductsPojo product : al) {
+            totalBillAmount += product.getTotal();
+        }
+
+        // Display bill details
+        StringBuilder billDetails = new StringBuilder();
+        billDetails.append("PRODUCT ID\t\tPRODUCT NAME\tQUANTITY\tPRICE\tTOTAL\n");
+        for (ProductsPojo product : al) {
+            billDetails.append(product.getProductId()).append("\t")
+                    .append(product.getProductName()).append("\t")
+                    .append(product.getQuantity()).append("\t")
+                    .append(product.getOurPrice()).append("\t")
+                    .append(product.getTotal()).append("\n");
+        }
+        billDetails.append("\nTotal Bill Amount: ").append(totalBillAmount);
+
+        JOptionPane.showMessageDialog(null, billDetails.toString(), "Bill Details", JOptionPane.INFORMATION_MESSAGE);
+
+        JOptionPane.showMessageDialog(null, "Order of Rs " + totalBillAmount + "/- created successfully");
+        ViewOrdersFrame vs = new ViewOrdersFrame();
+        vs.setVisible(true);
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(null, "Order not created");
+    }
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(null, "Database Error");
+    e.printStackTrace();
+}
+
+
+//        //1st find orderid
+//        try {
+//            String orderid = OrderDAO.getNextOrderId();
+//            if (OrderDAO.addOrder(al, orderid) && ProductDAO.updateStocks(al)) {
+//                JOptionPane.showMessageDialog(null, "Order of Rs " + total + "/- created successfullt");
+//                ViewOrdersFrame vs = new ViewOrdersFrame();
+//                vs.setVisible(true);
+//                this.dispose();
+//            } else {
+//                JOptionPane.showMessageDialog(null, "Order not created");
+//            }
+//        } catch (SQLException e) {
+//            JOptionPane.showMessageDialog(null, "Database Error");
+//            e.printStackTrace();
+//        }
+//////new comment
+//    if (al.isEmpty()) {
+//        JOptionPane.showMessageDialog(null, "No products added to the bill", "Error", JOptionPane.ERROR_MESSAGE);
+//        return;
+//    }
+//    
+//    // 2. Calculate the total bill amount
+//    double totalBillAmount = 0.0;
+//    for (ProductsPojo product : al) {
+//        totalBillAmount += product.getTotal();
+//    }
+//
+//    // 3. Display the bill in a new frame or dialog
+//    StringBuilder billDetails = new StringBuilder();
+//    billDetails.append("PRODUCT ID\t\tPRODUCT NAME\tQUANTITY\tPRICE\tTOTAL\n");
+//    for (ProductsPojo product : al) {
+//        billDetails.append(product.getProductId()).append("\t")
+//                   .append(product.getProductName()).append("\t")
+//                   .append(product.getQuantity()).append("\t")
+//                   .append(product.getOurPrice()).append("\t")
+//                   .append(product.getTotal()).append("\n");
+//    }
+//    billDetails.append("\nTotal Bill Amount: ").append(totalBillAmount);
+//    
+//    JOptionPane.showMessageDialog(null, billDetails.toString(), "Bill Details", JOptionPane.INFORMATION_MESSAGE);
+
     }//GEN-LAST:event_btnBillGenerateActionPerformed
 
     private void txtproudctIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtproudctIdActionPerformed
@@ -180,6 +274,13 @@ public class BillingFrame extends javax.swing.JFrame {
         loadItemList(txtproudctId.getText().trim());
 
     }//GEN-LAST:event_txtproudctIdActionPerformed
+
+    private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
+
+        ReceptionistOptionPanel rpp = new ReceptionistOptionPanel();
+        rpp.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnbackActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -217,7 +318,7 @@ public class BillingFrame extends javax.swing.JFrame {
     private javax.swing.JButton Logout;
     private javax.swing.JTable billtable;
     private javax.swing.JButton btnBillGenerate;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnback;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -227,7 +328,6 @@ public class BillingFrame extends javax.swing.JFrame {
 
     private void loadItemList(String productId) {
         try {
-            int index = getProductId(productId);
             ProductsPojo product = ProductDAO.getProductDetails(productId);
 
             if (product.getProductId() == null) {
@@ -235,81 +335,57 @@ public class BillingFrame extends javax.swing.JFrame {
                 return; // Exit if product not found
             }
 
+            int index = getRowIndex(product.getProductId());
+
             if (index == -1) {
-                // Add new product to the list
-                Object[] rowData = createRowData(product);
-                tm.addRow(rowData);
+                // Product not found in the table, add a new row
+                Object[] rowData = new Object[8];
+                int quan = 1;
+                double amt = quan * product.getOurPrice();
+                product.setQuantity(quan);
+                product.setTotal(amt + (amt * product.getTax() / 100));
+
+                rowData[0] = product.getProductId(); // Set product ID
+                rowData[1] = product.getProductName();
+                rowData[2] = product.getProductPrice();
+                rowData[3] = product.getOurPrice();
+                rowData[4] = product.getProductCompany();
+                rowData[5] = product.getQuantity(); // Default quantity for a new product
+                rowData[6] = product.getTax(); // Set the tax
+                rowData[7] = product.getTotal(); // Set the total amount including tax
+
+                tm.addRow(rowData); // Add new row to the table model
                 al.add(product);
                 total += product.getTotal();
             } else {
-                // Update existing product quantity and total
-                ProductsPojo existingProduct = al.get(index);
+                // Product found in the table, update quantity and total price
                 int oldQuantity = (int) tm.getValueAt(index, 5);
-                double amount = product.getOurPrice();  // Price without tax
-                int tax = product.getTax();  // Tax percentage
-                double totalAmount = amount + (amount * tax / 100);  // Total amount including tax
+                double amt = product.getOurPrice(); // Price without tax
+                int tax = product.getTax(); // Tax percentage
+                amt = amt + (amt * tax / 100); // Total amount including tax
                 double existingTotal = (double) tm.getValueAt(index, 7);
 
                 tm.setValueAt(++oldQuantity, index, 5);
-                tm.setValueAt(existingTotal + totalAmount, index, 7);
-                total += totalAmount;
-
+                tm.setValueAt(existingTotal + amt, index, 7);
+                total += amt;
+                ProductsPojo existingProduct = al.get(index);
                 existingProduct.setQuantity(oldQuantity);
-                existingProduct.setTotal(existingTotal + totalAmount);
+                existingProduct.setTotal(existingTotal + amt);
                 al.set(index, existingProduct);
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Handle or log the exception appropriately
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "An error occurred while loading product details", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private Object[] createRowData(ProductsPojo product) {
-        double amount = product.getOurPrice(); // Price without tax
-        int tax = product.getTax(); // Tax percentage
-        double totalAmount = amount + (amount * tax / 100); // Total amount including tax
-
-        Object[] rowData = new Object[8];
-        rowData[0] = product.getProductId();
-        rowData[1] = product.getProductName();
-        rowData[2] = product.getProductPrice();
-        rowData[3] = product.getOurPrice();
-        rowData[4] = product.getProductCompany();
-        rowData[5] = 1; // Default quantity for a new product
-        rowData[6] = totalAmount; // Set the total amount including tax
-        rowData[7] = totalAmount; // Set the total amount including tax
-
-        product.setQuantity(1); // Set default quantity for the product
-        product.setTotal(totalAmount);
-
-        return rowData;
-    }
-
-    private int getProductId(String productId) {
-        for (int i = 0; i < al.size(); i++) {
-            ProductsPojo product = al.get(i);
-            if (product.getProductId().equals(productId)) {
-                return i;
+    private int getRowIndex(String productId) {
+        for (int i = 0; i < tm.getRowCount(); i++) {
+            if (tm.getValueAt(i, 0).equals(productId)) {
+                return i; // Product found at this index
             }
         }
         return -1; // Product not found
     }
 
 }
-//
-//                // Clear existing table data
-//                DefaultTableModel model = (DefaultTableModel) billtable.getModel();
-//                model.setRowCount(0);
-//
-//                // Add the retrieved product details to the table
-//                model.addRow(new Object[]{
-//                    p.getProductId(),
-//                    p.getProductName(),
-//                    p.getProductPrice(),
-//                    p.getOurPrice(),
-//                    p.getProductCompany(),
-//                    p.getQuantity(),
-//                    p.getTax(),
-//                    // Calculate total price (example: product price * quantity)
-//                    p.getProductPrice() * p.getQuantity()
-//                });

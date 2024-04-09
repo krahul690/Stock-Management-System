@@ -1,4 +1,3 @@
-
 package emart.gui;
 
 /**
@@ -13,7 +12,7 @@ public class ManageStockFrame extends javax.swing.JFrame {
     public ManageStockFrame() {
         initComponents();
         setTitle("Stock Manage");
-         setResizable(false);
+        setResizable(false);
         setLocationRelativeTo(this);
     }
 
@@ -58,6 +57,11 @@ public class ManageStockFrame extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Back");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(255, 51, 51));
         jButton2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
@@ -237,9 +241,9 @@ public class ManageStockFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void ShowStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ShowStockActionPerformed
-         ViewStocks vs = new ViewStocks();
-         vs.setVisible(true);
-         this.dispose();
+        ViewStocks vs = new ViewStocks();
+        vs.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_ShowStockActionPerformed
 
     private void UpdatebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdatebtnActionPerformed
@@ -255,8 +259,17 @@ public class ManageStockFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addBtnActionPerformed
 
     private void RemovebtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemovebtnActionPerformed
-        
+        DeleteItemFrame dt = new DeleteItemFrame();
+        dt.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_RemovebtnActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        ManagerOptionFrame msf = new ManagerOptionFrame();
+        msf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -242,7 +242,9 @@ public class ManagerOptionFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnManageStockActionPerformed
 
     private void btnViewOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewOrderActionPerformed
-//        ViewOrdersFrame Vrf = ViewOrdersFrame();
+        ViewOrdersFrame Vrf = new ViewOrdersFrame();
+        Vrf.setVisible(true);
+        this.dispose();
         
     }//GEN-LAST:event_btnViewOrderActionPerformed
 

@@ -1,7 +1,7 @@
 package emart.dao;
 
-import com.mysql.cj.xdevapi.PreparableStatement;
 import emart.dbutil.DBConnection;
+import emart.pojo.OrderPojo;
 import emart.pojo.ProductsPojo;
 import emart.pojo.UserProfile;
 import java.sql.Connection;
@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDAO {
 
@@ -36,11 +37,34 @@ public class OrderDAO {
         int count = 0;
         for (ProductsPojo p : al) {
             ps.setString(1, orderid);
-            ps.setString(1, p.getProductId());
+            ps.setString(2, p.getProductId());
             ps.setInt(3, p.getQuantity());
             ps.setString(4, UserProfile.getUserid());
             count = count + ps.executeUpdate();
         }
-         return count==al.size();
+        return count == al.size();
+    }     
+
+    public static List<OrderPojo> getAllOrders() throws SQLException {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<OrderPojo> orderList = new ArrayList<>();
+            conn = DBConnection.getConnection();
+            String query = "SELECT * FROM orders";
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderPojo order = new OrderPojo();
+                order.setOrderId(rs.getString("Order_id"));
+                order.setProductId(rs.getString("P_ID"));
+                order.setQuantity(rs.getInt("QUANTITY"));
+                order.setUserId(rs.getString("USERID"));
+                orderList.add(order);
+            }
+        
+        return orderList;
     }
+
 }

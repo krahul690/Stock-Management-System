@@ -6,14 +6,12 @@ package emart.gui;
  */
 public class ReceptionistOptionPanel extends javax.swing.JFrame {
 
-     
     public ReceptionistOptionPanel() {
         initComponents();
         setResizable(false);
         setLocationRelativeTo(this);
     }
 
-     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -38,6 +36,11 @@ public class ReceptionistOptionPanel extends javax.swing.JFrame {
         btnLogout.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
         btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setText("Logout");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -65,11 +68,21 @@ public class ReceptionistOptionPanel extends javax.swing.JFrame {
         btnbillingsection.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnbillingsection.setForeground(new java.awt.Color(255, 255, 255));
         btnbillingsection.setText("Billing Section");
+        btnbillingsection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbillingsectionActionPerformed(evt);
+            }
+        });
 
         btnViewOrder.setBackground(new java.awt.Color(153, 0, 0));
         btnViewOrder.setFont(new java.awt.Font("Times New Roman", 1, 18)); // NOI18N
         btnViewOrder.setForeground(new java.awt.Color(255, 255, 255));
         btnViewOrder.setText("View Orders");
+        btnViewOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewOrderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -139,6 +152,24 @@ public class ReceptionistOptionPanel extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnbillingsectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbillingsectionActionPerformed
+        BillingFrame msf = new BillingFrame();
+        msf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnbillingsectionActionPerformed
+
+    private void btnViewOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewOrderActionPerformed
+        ViewOrdersFrame msf = new ViewOrdersFrame();
+        msf.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnViewOrderActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        LoginFrame lg = new LoginFrame();
+        lg.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
